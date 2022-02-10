@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bistro Babushka</title>
+
+    <style>
+      img {
+        max-width: 100%;
+        padding: 10px;
+      }
+
+      article {
+        justify-content: center;
+        display: grid;
+        padding-right: 20px;
+      }
+
+      p {
+        font-family: monospace;
+      }
+
+      h2 {
+        font-size: 2rem;
+        color: #007179;
+        text-align: center;
+        font-family: fantasy;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        padding-top: 10px;
+      }
+
+      .pris {
+        text-align: center;
+      }
+
+      .beskrivelse {
+        text-align: center;
+      }
+
+      button {
+        text-align: center;
+        font-family: monospace;
+      }
+
+      button {
+        font-size: 0.7em;
+        padding: 10px 10px 10px 10px;
+        background-color: #fdf6e3;
+        border: 3px solid #f0e8d1;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      button:hover {
+        background-color: #007179;
+      }
+    </style>
+  </head>
+  <body style="background-color: #f0e8d1">
+    <button>Tilbage</button>
+    <main style="background-color: #fdf6e3">
+      <article>
+        <h2 class="navn"></h2>
+        <p class="pris"></p>
+        <p class="beskrivelse"></p>
+        <img src="" alt="mad" class="billede" />
+      </article>
+    </main>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get("id");
+      console.log({ id });
+      let ret;
+
+      const url = `https://babushka-dd8a.restdb.io/rest/menu/${id}`;
+      const key = "600ec2fb1346a1524ff12de4";
+
+      async function hentData() {
+        console.log("hentData");
+        const respons = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-apikey": key,
+          },
+        });
+        ret = await respons.json();
+        console.log(ret);
+        vis();
+      }
+
+      function vis() {
+        document.querySelector(".navn").textContent = ret.navn;
+        document.querySelector(".beskrivelse").textContent =
+          ret.kortbeskrivelse;
+        document.querySelector(".pris").textContent =
+          "Pris: " + ret.pris + ",-";
+        document.querySelector(".billede").src =
+          "medium/" + ret.billednavn + "-md.jpg";
+      }
+
+      //går tilbage til den side man var på sidst
+      document.querySelector("button").addEventListener("click", () => {
+        history.back();
+      });
+
+      hentData();
+    </script>
+  </body>
+</html>
